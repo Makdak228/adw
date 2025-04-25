@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT-Словарь | Жаргон и проф. термины</title>
+    <style>
+        :root {
+            --primary: #1abc9c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--light);
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        /* Вкладки */
+        .tabs {
+            display: flex;
+            background: var(--dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .tab {
+            padding: 1rem;
+            color: white;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .tab:hover {
+            background: #34495e;
+        }
+        .tab.active {
+            background: var(--primary);
+        }
+        /* Поиск */
+        .search-container {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #search {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        /* Алфавит */
+        .alphabet {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+        .alphabet a {
+            display: block;
+            padding: 0.5rem 0.8rem;
+            background: var(--light);
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: 0.2s;
+        }
+        .alphabet a:hover, .alphabet a.active {
+            background: var(--primary);
+            color: white;
+        }
+        /* Термины */
+        .term-category {
+            display: none;
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .term-category.active {
+            display: block;
+        }
+        .letter-section {
+            margin-bottom: 2rem;
+        }
+        .letter-title {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            position: sticky;
+            top: 60px;
+            z-index: 10;
+        }
+        .term {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-left: 3px solid var(--primary);
+            background: #f9f9f9;
+            border-radius: 0 5px 5px 0;
+        }
+        .term h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--dark);
+        }
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .tab {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            .alphabet {
+                gap: 3px;
+            }
+            .alphabet a {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            .letter-title {
+                top: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>IT-Словарь</h1>
+        <p>Жаргонные и профессиональные термины</p>
+    </header>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showCategory('slang')">Жаргон</div>
+        <div class="tab" onclick="showCategory('professional')">Проф. термины</div>
+    </div>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Найти термин..." oninput="searchTerms()">
+        </div>
+
+        <div class="alphabet" id="alphabet-nav">
+            <!-- Алфавит генерируется JS -->
+        </div>
+
+        <!-- Жаргонные термины -->
+        <div id="slang" class="term-category active">
+            <!-- Термины добавляются JS -->
+            <div class="no-results">Ничего не найдено. Попробуйте другой запрос.</div>
+        </div>
+
+        <!-- Профессиональные термины -->
+        <div id="professional" class="term-category">
+            <!-- Термины добавляются JS -->
+            <div class="no-results">Ничего не найдено. Попробуйте другой запрос.</div>
+        </div>
+    </div>
+
+    <script>
+        // База терминов
+        const terms = {
+            slang: [
+                { term: "Абзац", definition: "Когда что-то сломалось («программа ушла в абзац»)." },
+                { term: "Афк (AFK)", definition: "Away From Keyboard – отошёл от компьютера." },
+                { term: "Баг", definition: "Ошибка в программе." },
+                { term: "Бан", definition: "Блокировка пользователя." },
+                { term: "Винт", definition: "Жёсткий диск (HDD)." },
+                { term: "Гамать", definition: "Играть в игры." },
+                { term: "Гик", definition: "Увлечённый IT-специалист." },
+                { term: "Движок", definition: "Ядро программы (например, игровой движок)." },
+                { term: "Жаба", definition: "Язык программирования Java." },
+                { term: "Зависон", definition: "Зависание программы." },
+                { term: "Залить", definition: "Загрузить файл на сервер." },
+                { term: "Кодить", definition: "Писать код." },
+                { term: "Кракозябры", definition: "Искажённые символы из-за проблем с кодировкой." },
+                { term: "Ламер", definition: "Неопытный пользователь." },
+                { term: "Мыло", definition: "Электронная почта (email)." },
+                { term: "Палёный", definition: "Неофициальное ПО (пиратская версия)." },
+                { term: "Сервак", definition: "Сервер." },
+                { term: "Сисадмин", definition: "Системный администратор." },
+                { term: "Тыкалка", definition: "Компьютерная мышь." },
+                { term: "Фича", definition: "Функция или особенность программы." },
+                // Добавьте ещё 20 жаргонных терминов...
+            ],
+            professional: [
+                { term: "API", definition: "Интерфейс программирования приложений." },
+                { term: "Бэкенд", definition: "Серверная часть приложения." },
+                { term: "Гит (Git)", definition: "Система контроля версий." },
+                { term: "Деплой", definition: "Развёртывание приложения на сервере." },
+                { term: "Интерфейс", definition: "Способ взаимодействия с программой." },
+                { term: "Кэш", definition: "Временное хранилище данных для ускорения доступа." },
+                { term: "Логирование", definition: "Запись событий в лог-файл." },
+                { term: "Миграция", definition: "Перенос данных между версиями БД." },
+                { term: "ООП", definition: "Объектно-ориентированное программирование." },
+                { term: "Рефакторинг", definition: "Улучшение кода без изменения функционала." },
+                { term: "Сокет", definition: "Конечная точка сетевого соединения." },
+                { term: "Фреймворк", definition: "Набор инструментов для разработки." },
+                { term: "Хост", definition: "Устройство или сервер в сети." },
+                { term: "Цикломатическая сложность", definition: "Метрика сложности кода." },
+                { term: "Юнит-тест", definition: "Тест отдельного модуля программы." },
+                // Добавьте ещё 25 профессиональных терминов...
+            ]
+        };
+
+        // Инициализация словаря
+        document.addEventListener('DOMContentLoaded', () => {
+            initAlphabet();
+            renderTerms('slang');
+            renderTerms('professional');
+        });
+
+        // Генерация алфавитной навигации
+        function initAlphabet() {
+            const alphabet = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЭЮЯ';
+            const container = document.getElementById('alphabet-nav');
+            
+            for (let letter of alphabet) {
+                const link = document.createElement('a');
+                link.href = `#${letter}`;
+                link.textContent = letter;
+                link.onclick = () => highlightLetter(letter);
+                container.appendChild(link);
+            }
+        }
+
+        // Отображение терминов
+        function renderTerms(category) {
+            const container = document.getElementById(category);
+            const groupedTerms = groupByLetter(terms[category]);
+            
+            container.innerHTML = '';
+            
+            for (let letter in groupedTerms) {
+                const section = document.createElement('div');
+                section.className = 'letter-section';
+                section.id = letter;
+                
+                const title = document.createElement('h2');
+                title.className = 'letter-title';
+                title.textContent = letter;
+                section.appendChild(title);
+                
+                groupedTerms[letter].forEach(item => {
+                    const termEl = document.createElement('div');
+                    termEl.className = 'term';
+                    termEl.innerHTML = `
+                        <h3>${item.term}</h3>
+                        <p>${item.definition}</p>
+                    `;
+                    termEl.dataset.searchText = `${item.term.toLowerCase()} ${item.definition.toLowerCase()}`;
+                    section.appendChild(termEl);
+                });
+                
+                container.appendChild(section);
+            }
+            
+            // Добавляем блок "Ничего не найдено"
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results';
+            noResults.style.display = 'none';
+            noResults.textContent = 'Ничего не найдено. Попробуйте другой запрос.';
+            container.appendChild(noResults);
+        }
+
+        // Группировка терминов по буквам
+        function groupByLetter(termsArray) {
+            const grouped = {};
+            
+            termsArray.forEach(item => {
+                const firstLetter = item.term[0].toUpperCase();
+                if (!grouped[firstLetter]) {
+                    grouped[firstLetter] = [];
+                }
+                grouped[firstLetter].push(item);
+            });
+            
+            return grouped;
+        }
+
+        // Поиск терминов
+        function searchTerms() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const activeCategory = document.querySelector('.term-category.active').id;
+            const terms = document.querySelectorAll(`#${activeCategory} .term`);
+            let hasResults = false;
+            
+            terms.forEach(term => {
+                const searchText = term.dataset.searchText;
+                if (searchText.includes(query)) {
+                    term.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    term.style.display = 'none';
+                }
+            });
+            
+            // Показываем/скрываем "Ничего не найдено"
+            document.querySelector(`#${activeCategory} .no-results`).style.display = 
+                hasResults ? 'none' : 'block';
+        }
+
+        // Переключение категорий
+        function showCategory(categoryId) {
+            document.querySelectorAll('.term-category').forEach(category => {
+                category.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(categoryId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            document.getElementById('search').value = '';
+            searchTerms(); // Сброс поиска при переключении
+        }
+
+        // Подсветка буквы в алфавите
+        function highlightLetter(letter) {
+            document.querySelectorAll('#alphabet-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.textContent === letter) {
+                    link.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
